@@ -3,6 +3,8 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 
+var port = process.env.PORT || 8080;
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 //render css files
@@ -58,7 +60,6 @@ app.get("/", function(req, res) {
     res.render("index", { task: task, complete: complete });
 });
 
-//set app to listen on port 3000
-app.listen(3000, function() {
-    console.log("server is running on port 3000");
+app.listen(port, function() {
+    console.log("server is running on port " + port);
 });
