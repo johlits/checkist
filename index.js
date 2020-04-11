@@ -37,6 +37,22 @@ app.post("/removetask", function(req, res) {
     res.redirect("/");
 });
 
+app.post("/redotask", function(req, res) {
+    var redoTask = req.body.check;
+    //check for the "typeof" the different completed task, then add into the complete task
+    if (typeof redoTask === "string") {
+        task.push(redoTask);
+        //check if the completed task already exits in the task when checked, then remove it
+        complete.splice(complete.indexOf(redoTask), 1);
+    } else if (typeof redoTask === "object") {
+        for (var i = 0; i < redoTask.length; i++) {
+            task.push(redoTask[i]);
+            complete.splice(complete.indexOf(redoTask[i]), 1);
+        }
+    }
+    res.redirect("/");
+});
+
 //render the ejs and display added task, completed task
 app.get("/", function(req, res) {
     res.render("index", { task: task, complete: complete });
