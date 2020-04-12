@@ -11,9 +11,9 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 //placeholders for added task
-var task = ["buy socks", "practise with nodejs"];
+var task = [];
 //placeholders for removed task
-var complete = ["finish jquery"];
+var complete = [];
 
 //post route for adding new task 
 app.post("/addtask", function(req, res) {
@@ -50,6 +50,19 @@ app.post("/redotask", function(req, res) {
         for (var i = 0; i < redoTask.length; i++) {
             task.push(redoTask[i]);
             complete.splice(complete.indexOf(redoTask[i]), 1);
+        }
+    }
+    res.redirect("/");
+});
+
+app.post("/deletetask", function(req, res) {
+    var deleteTask = req.body.check;
+    //check for the "typeof" the different completed task, then add into the complete task
+    if (typeof deleteTask === "string") {
+        complete.splice(complete.indexOf(deleteTask), 1);
+    } else if (typeof deleteTask === "object") {
+        for (var i = 0; i < deleteTask.length; i++) {
+            complete.splice(complete.indexOf(deleteTask[i]), 1);
         }
     }
     res.redirect("/");

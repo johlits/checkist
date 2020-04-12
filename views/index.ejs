@@ -1,38 +1,73 @@
 <html>
 <head> 
-<title> ToDo App </title>
- <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet">
- <link href="/styles.css" rel="stylesheet">
+<title>Checkist</title>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="/script.js"></script>
+	<link href="/bootstrap.min.css" rel="stylesheet">
+	<link href="/style.css" rel="stylesheet">
 </head>
 
 <body>
 <div class="container">
-<h2> A Simple ToDo List App </h2>
 
 <form action ="/addtask" method="POST">
 
-<input type="text" name="newtask" placeholder="add new task">
-<button> Add Task </button>
 
+<div class="input-group mb-3" style="width: 100%">
+  <input style="flex: 1 1 auto;" type="text" name="newtask" placeholder="Add new task..">
+  <div class="input-group-append">
+	<button class="btn btn-secondary input-group-btn" type="submit" id="top">Add Task</button>
+  </div>
+</div>
 
-<h2> Added Task </h2>
-
-<% for( var i = 0; i < task.length; i++){ %>
-    <li><input type="checkbox" name="check" value="<%= task[i] %>" /> <%= task[i] %> </li>
-<% } %>
-
-<button formaction="/removetask" type="submit" id="top"> Clear </button>
 </form>
 
-<h2> Completed task </h2>
+<% if (task.length > 0) { %>
+<h3>Tasks</h3>
+
+<form action ="/removetask" method="POST">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Task</th>
+    </tr>
+  </thead>
+  <tbody>
+	<% for( var i = 0; i < task.length; i++){ %>
+	<tr id="trtask<%= i %>" class="table-dark">
+		<th scope="row" onclick="clickListItem('task<%= i %>');"><%= task[i] %><input style="display: none" id="task<%= i %>" type="checkbox" name="check" value="<%= task[i] %>" /></th>
+    </tr>
+	<% } %>
+  </tbody>
+</table> 
+<button class="btn btn-success" type="submit" id="top">Finish</button>
+</form>
+<% } %>
+
+<% if (complete.length > 0) { %>
+<h3>Completed</h3>
 
 <form action ="/redotask" method="POST">
- <% for(var i = 0; i < complete.length; i++){ %>
-    <li><input type="checkbox" name="check" value="<%= complete[i] %>" /><%= complete[i] %> </li>
-<% } %>
-
-<button type="submit" id="top"> Redo </button>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Task</th>
+    </tr>
+  </thead>
+  <tbody>
+	<% for( var i = 0; i < complete.length; i++){ %>
+	<tr id="trcomplete<%= i %>" class="table-dark">
+      <th scope="row" onclick="clickListItem('complete<%= i %>');"><%= complete[i] %><input style="display: none" id="complete<%= i %>" type="checkbox" name="check" value="<%= complete[i] %>" /></th>
+    </tr>
+	<% } %>
+  </tbody>
+</table> 
+<button class="btn btn-secondary" type="submit" id="top">Redo</button>
+<button formaction="/deletetask" class="btn btn-danger" type="submit" id="top">Delete</button>
 </form>
+<% } %>
 
 </div>
 
