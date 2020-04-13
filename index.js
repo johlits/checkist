@@ -1,9 +1,12 @@
 //dependencies required for the app
 var express = require("express");
 var bodyParser = require("body-parser");
+const needle = require('needle');
+
 var app = express();
 
 var port = process.env.PORT || 8080;
+var db_name = process.env.DB_TABLE || "checkist";
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
@@ -22,9 +25,19 @@ var helper = require('./helper');
 //post route for adding new task 
 app.post("/addtask", function(req, res) {
     var newTask = req.body.newtask;
-    //add the new task from the post route
     task.push(newTask);
-    res.redirect("/");
+	
+	var req = {
+		update_checkist: db_name,
+		json: JSON.stringify({ task: task, complete: complete, datecomplete: datecomplete })
+	};
+	
+	needle.post('https://palz.one/server.php', req, 
+		function(err, resp, body){
+			console.log(body);
+			res.redirect("/");
+	});
+	
 });
 
 app.post("/removetask", function(req, res) {
@@ -42,7 +55,17 @@ app.post("/removetask", function(req, res) {
             task.splice(task.indexOf(completeTask[i]), 1);
         }
     }
-    res.redirect("/");
+    
+	var req = {
+		update_checkist: db_name,
+		json: JSON.stringify({ task: task, complete: complete, datecomplete: datecomplete })
+	};
+	
+	needle.post('https://palz.one/server.php', req, 
+		function(err, resp, body){
+			console.log(body);
+			res.redirect("/");
+	});
 });
 
 app.post("/redotask", function(req, res) {
@@ -60,7 +83,17 @@ app.post("/redotask", function(req, res) {
 			datecomplete.splice(datecomplete.indexOf(redoTask[i]), 1);
         }
     }
-    res.redirect("/");
+    
+	var req = {
+		update_checkist: db_name,
+		json: JSON.stringify({ task: task, complete: complete, datecomplete: datecomplete })
+	};
+	
+	needle.post('https://palz.one/server.php', req, 
+		function(err, resp, body){
+			console.log(body);
+			res.redirect("/");
+	});
 });
 
 app.post("/deletetask", function(req, res) {
@@ -75,12 +108,34 @@ app.post("/deletetask", function(req, res) {
 			datecomplete.splice(datecomplete.indexOf(deleteTask[i]), 1);
         }
     }
-    res.redirect("/");
+    
+	var req = {
+		update_checkist: db_name,
+		json: JSON.stringify({ task: task, complete: complete, datecomplete: datecomplete })
+	};
+	
+	needle.post('https://palz.one/server.php', req, 
+		function(err, resp, body){
+			console.log(body);
+			res.redirect("/");
+	});
 });
 
 //render the ejs and display added task, completed task
 app.get("/", function(req, res) {
-    res.render("index", { task: task, complete: complete, datecomplete: datecomplete, helper: helper });
+	
+	needle.get('https://palz.one/server.php?get_checkist=' + db_name, function(error, response) {
+	if (!error && response.statusCode == 200) {
+		var result = JSON.parse(JSON.parse(response.body)[0].json);
+		task = result.task;
+		complete = result.complete;
+		datecomplete = [];
+		for (var i = 0; i < result.datecomplete.length; i++) {
+			datecomplete[i] = new Date(result.datecomplete[i]);
+		}
+		res.render("index", { task: task, complete: complete, datecomplete: datecomplete, helper: helper });
+	}});
+	
 });
 
 app.listen(port, function() {
