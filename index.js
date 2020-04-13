@@ -7,23 +7,20 @@ var app = express();
 
 var port = process.env.PORT || 8080;
 var db_name = process.env.DB_TABLE || "checkist";
+var server_endpoint = 'https://palz.one/server.php';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-//render css files
+
 app.use(express.static("public"));
 
-//placeholders for added task
 var task = [];
-//placeholders for removed task
 var complete = [];
-
 var datecomplete = [];
 
 var helper = require('./helper');
 var loaded = false;
 
-//post route for adding new task 
 app.post("/addtask", function(req, res) {
 	
 	if (!loaded) {
@@ -38,9 +35,8 @@ app.post("/addtask", function(req, res) {
 		json: JSON.stringify({ task: task, complete: complete, datecomplete: datecomplete })
 	};
 	
-	needle.post('https://palz.one/server.php', req, 
+	needle.post(server_endpoint, req, 
 		function(err, resp, body){
-			console.log(body);
 			res.redirect("/");
 	});
 	
@@ -53,11 +49,10 @@ app.post("/removetask", function(req, res) {
 	}
 	
     var completeTask = req.body.check;
-    //check for the "typeof" the different completed task, then add into the complete task
+
     if (typeof completeTask === "string") {
         complete.push(completeTask);
 		datecomplete.push(new Date());
-        //check if the completed task already exits in the task when checked, then remove it
         task.splice(task.indexOf(completeTask), 1);
     } else if (typeof completeTask === "object") {
         for (var i = 0; i < completeTask.length; i++) {
@@ -72,9 +67,8 @@ app.post("/removetask", function(req, res) {
 		json: JSON.stringify({ task: task, complete: complete, datecomplete: datecomplete })
 	};
 	
-	needle.post('https://palz.one/server.php', req, 
+	needle.post(server_endpoint, req, 
 		function(err, resp, body){
-			console.log(body);
 			res.redirect("/");
 	});
 });
@@ -86,10 +80,9 @@ app.post("/redotask", function(req, res) {
 	}
 	
     var redoTask = req.body.check;
-    //check for the "typeof" the different completed task, then add into the complete task
+
     if (typeof redoTask === "string") {
         task.push(redoTask);
-        //check if the completed task already exits in the task when checked, then remove it
         complete.splice(complete.indexOf(redoTask), 1);
 		datecomplete.splice(datecomplete.indexOf(redoTask), 1);
     } else if (typeof redoTask === "object") {
@@ -105,9 +98,8 @@ app.post("/redotask", function(req, res) {
 		json: JSON.stringify({ task: task, complete: complete, datecomplete: datecomplete })
 	};
 	
-	needle.post('https://palz.one/server.php', req, 
+	needle.post(server_endpoint, req, 
 		function(err, resp, body){
-			console.log(body);
 			res.redirect("/");
 	});
 });
@@ -119,7 +111,7 @@ app.post("/deletetask", function(req, res) {
 	}
 	
     var deleteTask = req.body.check;
-    //check for the "typeof" the different completed task, then add into the complete task
+
     if (typeof deleteTask === "string") {
         complete.splice(complete.indexOf(deleteTask), 1);
 		datecomplete.splice(datecomplete.indexOf(deleteTask), 1);
@@ -135,17 +127,15 @@ app.post("/deletetask", function(req, res) {
 		json: JSON.stringify({ task: task, complete: complete, datecomplete: datecomplete })
 	};
 	
-	needle.post('https://palz.one/server.php', req, 
+	needle.post(server_endpoint, req, 
 		function(err, resp, body){
-			console.log(body);
 			res.redirect("/");
 	});
 });
 
-//render the ejs and display added task, completed task
 app.get("/", function(req, res) {
 	
-	needle.get('https://palz.one/server.php?get_checkist=' + db_name, function(error, response) {
+	needle.get(server_endpoint + '?get_checkist=' + db_name, function(error, response) {
 	if (!error && response.statusCode == 200) {
 		var result = JSON.parse(JSON.parse(response.body)[0].json);
 		task = result.task;

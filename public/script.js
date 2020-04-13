@@ -3,11 +3,11 @@ function clickListItem(element) {
     chk.checked = !chk.checked;
 	var row = $("#tr" + element);
 	if (chk.checked) {
-		row.removeClass("table-dark");
+		row.removeClass("table-light");
 		row.addClass("table-primary");
 	}
 	else {
 		row.removeClass("table-primary");
-		row.addClass("table-dark");
+		row.addClass("table-light");
 	}
 }

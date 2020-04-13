@@ -46,7 +46,7 @@
 </form>
 
 <% if (task.length > 0) { %>
-<h3>Tasks</h3>
+<h3>Todo</h3>
 
 <form action ="/removetask" method="POST">
 <table class="table table-hover">
@@ -58,7 +58,7 @@
   </thead>
   <tbody>
 	<% for( var i = 0; i < task.length; i++){ %>
-	<tr id="trtask<%= i %>" class="table-dark" onclick="clickListItem('task<%= i %>');">
+	<tr id="trtask<%= i %>" class="table-light" onclick="clickListItem('task<%= i %>');">
 		<td scope="row"><%= task[i] %><input style="display: none" id="task<%= i %>" type="checkbox" name="check" value="<%= task[i] %>" /></td>
 		<td>
 		</td>
@@ -66,8 +66,13 @@
 	<% } %>
   </tbody>
 </table> 
+
+<div class="text-right">
 <button class="btn btn-success" type="submit" id="top">Finish</button>
+</div>
+
 </form>
+
 <% } %>
 
 <% if (complete.length > 0) { %>
@@ -83,15 +88,17 @@
   </thead>
   <tbody>
 	<% for( var i = 0; i < complete.length; i++){ %>
-	<tr id="trcomplete<%= i %>" class="table-dark" onclick="clickListItem('complete<%= i %>');">
+	<tr id="trcomplete<%= i %>" class="table-light" onclick="clickListItem('complete<%= i %>');">
       <td scope="row"><%= complete[i] %><input style="display: none" id="complete<%= i %>" type="checkbox" name="check" value="<%= complete[i] %>" /></td>
 	  <td><span><%= helper.getTimeDiff(datecomplete[i]); %></span></td>
     </tr>
 	<% } %>
   </tbody>
 </table> 
-<button class="btn btn-secondary" type="submit" id="top">Redo</button>
-<button formaction="/deletetask" class="btn btn-danger" type="submit" id="top">Delete</button>
+
+<button formaction="/deletetask" class="btn btn-danger float-left" type="submit" id="top">Delete</button>
+<button class="btn btn-info float-right" type="submit" id="top">Redo</button>
+
 </form>
 <% } %>
 
