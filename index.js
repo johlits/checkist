@@ -15,6 +15,10 @@ var task = [];
 //placeholders for removed task
 var complete = [];
 
+var datecomplete = [];
+
+var helper = require('./helper');
+
 //post route for adding new task 
 app.post("/addtask", function(req, res) {
     var newTask = req.body.newtask;
@@ -28,11 +32,13 @@ app.post("/removetask", function(req, res) {
     //check for the "typeof" the different completed task, then add into the complete task
     if (typeof completeTask === "string") {
         complete.push(completeTask);
+		datecomplete.push(new Date());
         //check if the completed task already exits in the task when checked, then remove it
         task.splice(task.indexOf(completeTask), 1);
     } else if (typeof completeTask === "object") {
         for (var i = 0; i < completeTask.length; i++) {
             complete.push(completeTask[i]);
+			datecomplete.push(new Date());
             task.splice(task.indexOf(completeTask[i]), 1);
         }
     }
@@ -46,10 +52,12 @@ app.post("/redotask", function(req, res) {
         task.push(redoTask);
         //check if the completed task already exits in the task when checked, then remove it
         complete.splice(complete.indexOf(redoTask), 1);
+		datecomplete.splice(datecomplete.indexOf(redoTask), 1);
     } else if (typeof redoTask === "object") {
         for (var i = 0; i < redoTask.length; i++) {
             task.push(redoTask[i]);
             complete.splice(complete.indexOf(redoTask[i]), 1);
+			datecomplete.splice(datecomplete.indexOf(redoTask[i]), 1);
         }
     }
     res.redirect("/");
@@ -60,9 +68,11 @@ app.post("/deletetask", function(req, res) {
     //check for the "typeof" the different completed task, then add into the complete task
     if (typeof deleteTask === "string") {
         complete.splice(complete.indexOf(deleteTask), 1);
+		datecomplete.splice(datecomplete.indexOf(deleteTask), 1);
     } else if (typeof deleteTask === "object") {
         for (var i = 0; i < deleteTask.length; i++) {
             complete.splice(complete.indexOf(deleteTask[i]), 1);
+			datecomplete.splice(datecomplete.indexOf(deleteTask[i]), 1);
         }
     }
     res.redirect("/");
@@ -70,7 +80,7 @@ app.post("/deletetask", function(req, res) {
 
 //render the ejs and display added task, completed task
 app.get("/", function(req, res) {
-    res.render("index", { task: task, complete: complete });
+    res.render("index", { task: task, complete: complete, datecomplete: datecomplete, helper: helper });
 });
 
 app.listen(port, function() {
