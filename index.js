@@ -21,9 +21,15 @@ var complete = [];
 var datecomplete = [];
 
 var helper = require('./helper');
+var loaded = false;
 
 //post route for adding new task 
 app.post("/addtask", function(req, res) {
+	
+	if (!loaded) {
+		return;
+	}
+	
     var newTask = req.body.newtask;
     task.push(newTask);
 	
@@ -41,6 +47,11 @@ app.post("/addtask", function(req, res) {
 });
 
 app.post("/removetask", function(req, res) {
+	
+	if (!loaded) {
+		return;
+	}
+	
     var completeTask = req.body.check;
     //check for the "typeof" the different completed task, then add into the complete task
     if (typeof completeTask === "string") {
@@ -69,6 +80,11 @@ app.post("/removetask", function(req, res) {
 });
 
 app.post("/redotask", function(req, res) {
+	
+	if (!loaded) {
+		return;
+	}
+	
     var redoTask = req.body.check;
     //check for the "typeof" the different completed task, then add into the complete task
     if (typeof redoTask === "string") {
@@ -97,6 +113,11 @@ app.post("/redotask", function(req, res) {
 });
 
 app.post("/deletetask", function(req, res) {
+	
+	if (!loaded) {
+		return;
+	}
+	
     var deleteTask = req.body.check;
     //check for the "typeof" the different completed task, then add into the complete task
     if (typeof deleteTask === "string") {
@@ -134,6 +155,7 @@ app.get("/", function(req, res) {
 			datecomplete[i] = new Date(result.datecomplete[i]);
 		}
 		res.render("index", { task: task, complete: complete, datecomplete: datecomplete, helper: helper });
+		loaded = true;
 	}});
 	
 });
