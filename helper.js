@@ -17,7 +17,7 @@ function getTimeDiff(ms) {
 	if (hours === 1) {
 		return hours + " hour ago";
 	}
-	if (hours < 60) {
+	if (hours < 24) {
 		return hours + " hours ago";
 	}
 	var days = Math.floor(hours / 24);
