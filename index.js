@@ -7,7 +7,7 @@ var app = express();
 
 var port = process.env.PORT || 8080;
 var db_name = process.env.DB_TABLE || "checkist";
-var server_endpoint = 'https://palz.one/server.php';
+var server_endpoint = 'https://palplanner.com/zone/server.php';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
