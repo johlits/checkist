@@ -133,6 +133,10 @@ app.post("/deletetask", function(req, res) {
 	});
 });
 
+app.post("/refresh", function(req, res) {
+    res.redirect("/");
+});
+
 app.get("/", function(req, res) {
 	
 	needle.get(server_endpoint + '?get_checkist=' + db_name, function(error, response) {
