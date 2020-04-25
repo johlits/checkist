@@ -64,7 +64,7 @@
     </tr>
   </thead>
   <tbody>
-	<% for( var i = 0; i < task.length; i++){ %>
+	<% for( var i = task.length-1; i >= 0; i--){ %>
 	<tr id="trtask<%= i %>" class="table-light" onclick="clickListItem('task<%= i %>');">
 		<td scope="row"><%= task[i] %><input style="display: none" id="task<%= i %>" type="checkbox" name="check" value="<%= task[i] %>" /></td>
 		<td>
@@ -94,7 +94,7 @@
     </tr>
   </thead>
   <tbody>
-	<% for( var i = 0; i < complete.length; i++){ %>
+	<% for( var i = complete.length-1; i >= 0; i--){ %>
 	<tr id="trcomplete<%= i %>" class="table-light" onclick="clickListItem('complete<%= i %>');">
       <td scope="row"><%= complete[i] %><input style="display: none" id="complete<%= i %>" type="checkbox" name="check" value="<%= complete[i] %>" /></td>
 	  <td><span><%= helper.getTimeDiff(datecomplete[i]); %></span></td>
